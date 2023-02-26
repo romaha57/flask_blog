@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container text-center my-5">
+  <h2>Добавить пост</h2>
+    <br>
+    <form class="shadow-border col-6 mx-auto py-3" method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <div class="col col-6 mx-auto">
+            <p>{{ form.name(class='form-control', placeholder='Название поста') }}</p>
+        </div>
+        <div class="col col-6 mx-auto">
+            <p>{{ form.image(class='form-control') }}</p>
+        </div>
+        <div class="col col-6 mx-auto">
+            <p>{{ form.description(class='form-control', placeholder='Описание') }}</p>
+        </div>
+        <div class="col col-6 mx-auto">
+            {{ form.category.label }}
+            <p>{{ form.category(class='form-control', placeholder='Категория') }}</p>
+        </div>
+        <div class="col col-6 mx-auto">
+            {{ form.tags.label }}
+            <p>{{ form.tags(class='form-control', placeholder='Теги') }}</p>
+        </div>
+        <br>
+        <p><button type="submit" class="btn btn-primary d-grid gap-2 col-4 mx-auto">Добавить пост</button></p>
+    </form>
+</div>
+{% endblock %}

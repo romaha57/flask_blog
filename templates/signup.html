@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="container text-center my-5">
+    <h2>Регистрация</h2>
+    <br>
+    <form class="shadow-border col-6 mx-auto py-3" method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <div class="col col-6 mx-auto">
+            <p>{{ form.name(class='form-control', placeholder='Введите имя') }}</p>
+        </div>
+        <div class="col col-6 mx-auto">
+            <p>{{ form.email(class='form-control', placeholder='Введите email') }}</p>
+        </div>
+        <div class="col col-6 mx-auto">
+            <p>{{ form.password(class='form-control', placeholder='Введите пароль') }}</p>
+        </div>
+        <div class="col col-6 mx-auto">
+            <p>{{ form.password_repeat(class='form-control', placeholder='Повторите пароль') }}</p>
+        </div>
+        <div class="col col-6 mx-auto">
+            {{ form.submit(class='btn btn-primary') }}
+        </div>
+    </form>
+</div>
+{% endblock %}

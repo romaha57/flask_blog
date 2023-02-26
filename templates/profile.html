@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="container text-center my-5">
+    <div class="row">
+       <div class="col col-4">
+           {% if current_user.get_user_from_db().avatar %}
+           <p><img class="border-image" src="{{ url_for('account.media', filename=current_user.get_user_from_db().avatar) }}" width="200px" height="200px" alt="Photo"></p>
+           {% else %}
+           <p><img class="border-image" src="{{ url_for('static', filename='img/default_avatar.jpg') }}" width="200px" alt="Avatar"></p>
+           {% endif %}
+
+
+       </div>
+
+        <div class="col col-8">
+            <h2>Личный кабинет</h2>
+            <ul class="icon-list ps-0">
+              <li class="d-flex align-items-start mb-1"><img src="https://cdn-icons-png.flaticon.com/512/456/456212.png" width="15px">Имя пользователя: {{ user.name }}</li>
+              <li class="d-flex align-items-start mb-1"><img src="https://cdn-icons-png.flaticon.com/512/5915/5915034.png" width="15px">Email: {{ user.email }}</li>
+
+              {% if current_user.get_user_from_db().is_admin %}
+                  <li class="d-flex align-items-start mb-1"><img src="https://cdn-icons-png.flaticon.com/512/2823/2823931.png" width="15px">Статус: Администратор</li>
+              {% else %}
+                 <li class="d-flex align-items-start mb-1"><img src="https://cdn-icons-png.flaticon.com/512/2823/2823931.png" width="15px">Статус: {{ user.status_id }}</li>
+              {% endif %}
+
+            </ul>
+            <a class="btn btn-primary" href="{{ url_for('account.change_password_view', username=user.name) }}">Изменить пароль</a>
+
+            <p><form method="post" enctype="multipart/form-data">
+              {{ form.csrf_token }}
+              {{ form.avatar(class='form-control') }}
+                <br>
+              {{ form.submit(class='btn btn-success') }}
+           </form></p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col">
+            <p>13131231</p>
+        </div>
+        <div class="col">
+            <p>142342342</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
