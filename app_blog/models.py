@@ -41,7 +41,7 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
     def __repr__(self):
-        return f'<Comment -  {self.author}>'
+        return f'<Comment -  {self.author_id.name}>'
 
 
 class Category(db.Model):

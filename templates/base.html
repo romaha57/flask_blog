@@ -17,93 +17,238 @@
 </head>
 <body>
 <header>
+
+<!--    NAVBAR-->
+
     <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{{ url_for('blog.index_view') }}">Flask</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{{ url_for('blog.create_post_view') }}">Добавить пост</a>
-        </li>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('blog.index_view') }}">Flask</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+          {% if current_user.is_authenticated %}
+             <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{{ url_for('blog.create_post_view') }}">Добавить пост</a>
+              </li>
+          {% endif %}
+
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{{ url_for('blog.category_view') }}">Категории</a>
         </li>
 
         {% if current_user.is_authenticated %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Аккаунт, {{ current_user.get_user_from_db().name }}
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ url_for('account.profile_view', username=current_user.get_user_from_db().name) }}">Личный кабинет</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{{ url_for('account.logout_view') }}">Выйти</a></li>
-          </ul>
+            <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Аккаунт, {{ current_user.get_user_from_db().name }}
+                  </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ url_for('account.profile_view', username=current_user.get_user_from_db().name) }}">Личный кабинет</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ url_for('account.logout_view') }}">Выйти</a></li>
+              </ul>
 
-        {% if current_user.get_user_from_db().is_admin %}
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('blog.create_category_view') }}">Добавить категорию</a>
-            </li>
-        {% endif %}
+            {% if current_user.get_user_from_db().is_admin %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('blog.create_category_view') }}">Добавить категорию</a>
+                </li>
+            {% endif %}
 
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ url_for('account.login_view') }}">Войти</a>
-          </li>
-
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('account.login_view') }}">Войти</a>
+              </li>
           {% endif %}
-
-
-
       </ul>
 
+<!--         END NAVBAR   -->
+
+<!--            SEARCH FIELD-->
       <form action="{{ url_for('blog.search_result_view') }}" class="d-flex">
            <input class="form-control me-2" placeholder="Найти на сайте..." type="search" required name="q">
           <button class="btn btn-primary" type="submit">Search</button>
       </form>
 
-    </div>
-  </div>
-</nav>
+<!--            END SEARCH FIELD-->
+
+        </div>
+      </div>
+    </nav>
 </header>
 
+<!--FLUSH MESSAGE-->
 
 <div class="container text-center my-5">
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-
         {% for category, message in messages %}
-        <div class="alert alert-{{ category }} text-center my-5">
-            {{ message| safe }}
-        </div>
+            <div class="alert alert-{{ category }} text-center my-5">
+                {{ message| safe }}
+            </div>
         {% endfor %}
 
     {% endif %}
     {% endwith %}
 
+    <!--END FLUSH MESSAGE-->
+
+    <!--FORM ERRORS-->
+
     {% if form %}
     {% for field, errors in form.errors.items() %}
-    <div class="alert alert-danger">
-        {{ form[field].label }}: {{ ', '.join(errors) }}
-    </div>
+        <div class="alert alert-danger">
+            {{ form[field].label }}: {{ ', '.join(errors) }}
+        </div>
     {% endfor %}
     {% endif %}
-
 </div>
+
+<!--END FORM ERRORS-->
+
 
 {% block content %}
 {% endblock %}
 
-<footer class="py-3 my-0" style="background-color: #ccc">
-    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
-    </ul>
-    <p class="text-center text-muted">© 2022 Company, Inc</p>
+
+<!--PAGINATION-->
+
+{% if posts %}
+    {% if slug_category %}
+
+        <div class="row py-5 text-center">
+            <div class="col-md-8">
+                <div class="text-right">
+                    <a href="{{ url_for('blog.index_view', page=posts.prev_num, slug_category=slug_category) }}"
+                       class="btn btn-outline-dark
+                       {% if posts.page == 1 %}disabled{% endif %}">
+                        &laquo;
+                    </a>
+                    <!-- Loop through the number of pages to display a link for each-->
+                        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                <!-- Check for the active page and set the link to "Active"-->
+                                {% if posts.page == page_num %}
+                                    <a href="{{ url_for('blog.index_view', page=page_num, slug_category=slug_category) }}"
+                                       class="btn btn-dark">
+                                        {{ page_num }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ url_for('blog.index_view', page=page_num, slug_category=slug_category) }}"
+                                       class="btn btn-outline-dark">
+                                        {{ page_num }}
+                                    </a>
+                                {% endif %}
+
+                            {% else %}
+                                ...
+                            {% endif %}
+                        {% endfor %}
+
+                    <a href="{{ url_for('blog.index_view', page=posts.next_num, slug_category=slug_category) }}"
+                       class="btn btn-outline-dark
+                       {% if posts.page == posts.pages %}disabled{% endif %}">
+                        &raquo;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+    {% elif slug_tag %}
+    <div class="row py-5 text-center">
+        <div class="col-md-8">
+            <div class="text-right">
+                <a href="{{ url_for('blog.index_view', page=posts.prev_num, slug_tag=slug_tag) }}"
+                   class="btn btn-outline-dark
+                   {% if posts.page == 1 %}disabled{% endif %}">
+                    &laquo;
+                </a>
+                    <!-- Loop through the number of pages to display a link for each-->
+                    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                        <!-- Check for the active page and set the link to "Active"-->
+                            {% if posts.page == page_num %}
+                            <a href="{{ url_for('blog.index_view', page=page_num, slug_tag=slug_tag) }}"
+                               class="btn btn-dark">
+                                {{ page_num }}
+                            </a>
+                            {% else %}
+                                <a href="{{ url_for('blog.index_view', page=page_num, slug_tag=slug_tag) }}"
+                                   class="btn btn-outline-dark">
+                                    {{ page_num }}
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    {% endfor %}
+
+                <a href="{{ url_for('blog.index_view', page=posts.next_num, slug_tag=slug_tag) }}"
+                   class="btn btn-outline-dark
+                   {% if posts.page == posts.pages %}disabled{% endif %}">
+                    &raquo;
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    {% else %}
+        <div class="row py-5 text-center">
+            <div class="col-md-8">
+                <div class="text-right">
+                    <a href="{{ url_for('blog.index_view', page=posts.prev_num) }}"
+                       class="btn btn-outline-dark
+                       {% if posts.page == 1 %}disabled{% endif %}">
+                        &laquo;
+                    </a>
+                    <!-- Loop through the number of pages to display a link for each-->
+                    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                        <!-- Check for the active page and set the link to "Active"-->
+                            {% if posts.page == page_num %}
+                            <a href="{{ url_for('blog.index_view', page=page_num) }}"
+                               class="btn btn-dark">
+                                {{ page_num }}
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('blog.index_view', page=page_num) }}"
+                               class="btn btn-outline-dark">
+                                {{ page_num }}
+                            </a>
+                        {% endif %}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    {% endfor %}
+
+                    <a href="{{ url_for('blog.index_view', page=posts.next_num) }}"
+                       class="btn btn-outline-dark
+                       {% if posts.page == posts.pages %}disabled{% endif %}">
+                        &raquo;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+{% endif %}
+
+<!--END PAGINATION-->
+
+<!--FOOTER-->
+
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <div class="col-md-4 d-flex align-items-center">
+      <span class="mb-3 mb-md-0 text-muted">© 2022 Company, Inc</span>
+    </div>
   </footer>
+</div>
+
 </body>
 </html>
+
+<!--END FOOTER-->

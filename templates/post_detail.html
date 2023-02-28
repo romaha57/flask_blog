@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center">{{ post.name }}</h2>
+    <br>
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <p class="text-warning-emphasis">Автор: {{ post.author.name }}</p>
+        Категория: <a class="text-primary" href="{{ url_for('blog.index_view', slug_category=post.category.slug) }}">{{ post.category.name }}</a>
+        <br>
+
+        {% if post.tags %}
+        <span>Теги</span>
+            {% for tag in post.tags %}
+                <a href="{{ url_for('blog.index_view', slug_tag=tag.slug) }}">{{ tag.name }}</a>
+            {% endfor %}
+        {% endif %}
+
+        <div class="container-fluid py-5">
+            <p class="col-md-8 fs-4">{{ post.description }}</p>
+        </div>
+    </div>
+
+    <br>
+    <hr>
+
+    <div class="row">
+            <div class="col col-4">
+                {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('blog.detail_post_view', post_slug=post.slug) }}" method="post">
+                        {{ form.csrf_token }}
+                        {{ form.text_comment(class='form-control') }}
+                        <br>
+                        <button class="btn btn-primary" type="submit">Оставить комментарий</button>
+                    </form>
+                {% else %}
+                    <h2>Чтобы оставлять комментарии нужно <a href="{{ url_for('login_view') }}">войти</a></h2>
+                {% endif %}
+                <br>
+                <div class="row">
+                    {% for comment in all_comment %}
+                        <p>{{ comment.text_comment }} --- {{ comment.author.name }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

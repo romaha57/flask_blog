@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from wtforms import ValidationError
 
+from app_blog.models import Post
 from config import Settings
 from .forms import LoginUserForm, RegisterUserForm, RestorePasswordForm, UploadAvatarUser
 from .services import check_password, is_image
@@ -96,7 +97,8 @@ def profile_view(username):
             flash('Ошибка при загрузке файла', category='danger')
 
     user = db.session.query(User).filter(User.name==username).first()
-    return render_template('profile.html', user=user, form=form)
+    posts_by_user = db.session.query(Post).filter(Post.author_id==user.id).order_by(Post.created_at.desc())
+    return render_template('profile.html', user=user, form=form, posts_by_user=posts_by_user)
 
 
 @user_blueprint.route('/profile/<username>/change-password', methods=['GET', 'POST'])
@@ -125,7 +127,6 @@ def change_password_view(username):
 
 
 @user_blueprint.route('/media/<path:filename>')
-@login_required
 def media(filename):
     return send_from_directory(Settings.UPLOAD_PATH, filename)
 
