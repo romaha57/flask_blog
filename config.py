@@ -1,7 +1,7 @@
 import os
 
-from flask_debugtoolbar import DebugToolbarExtension
 from dotenv import load_dotenv
+from flask_debugtoolbar import DebugToolbarExtension
 from flask_humanize import Humanize
 
 load_dotenv()
@@ -13,6 +13,7 @@ class Settings:
     SECRET_KEY = os.getenv('SECRET_KEY')
     FLASK_ADMIN_SWATCH = 'cerulean'
     DEBUG_TB_INTERCEPT_REDIRECTS = False
+    PER_PAGE = 10
 
     UPLOAD_PATH = 'media'
 

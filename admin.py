@@ -1,9 +1,9 @@
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
-from database import db
+from app_blog.models import  Comment, Post, Tag
 from app_user.models import User, UserStatus
-from app_blog.models import Category, Post, Comment, Tag
+from database import db
 
 
 class CustomModelView(ModelView):
@@ -20,4 +20,3 @@ admin.add_view(CustomModelView(UserStatus, db.session))
 admin.add_view(CustomModelView(Post, db.session))
 admin.add_view(CustomModelView(Comment, db.session))
 admin.add_view(CustomModelView(Tag, db.session))
-

@@ -1,5 +1,4 @@
-from flask_login import LoginManager
-from flask_login import UserMixin
+from flask_login import LoginManager, UserMixin
 
 from .models import User
 

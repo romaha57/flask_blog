@@ -1,16 +1,14 @@
 from flask import Flask, render_template
-from werkzeug.exceptions import NotFound, BadRequest, RequestEntityTooLarge
-from app_blog.views import blog_blueprint
-from app_user.views import user_blueprint
-from config import Settings, toolbar
+from werkzeug.exceptions import BadRequest, NotFound, RequestEntityTooLarge
 
-
-from database import db, migrate
 from admin import admin
-from app_user.models import *
 from app_blog.models import *
+from app_user.models import *
+from app_blog.views import blog_blueprint
 from app_user.login_config import login_manager
-from config import humanize
+from app_user.views import user_blueprint
+from config import Settings, humanize, toolbar
+from database import db, migrate
 
 app = Flask(__name__)
 app.config.from_object(Settings)
@@ -44,4 +42,4 @@ def too_large(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(debug=True, host='0.0.0.0', port=8000)

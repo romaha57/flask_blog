@@ -1,4 +1,3 @@
-
 from app_blog.models import Category, Tag
 from database import db
 
@@ -17,4 +16,3 @@ def get_tags_for_choice():
         tags = db.session.query(Tag).all()
         choice_tags = [(tag.name, tag.name) for tag in tags]
         return choice_tags
-

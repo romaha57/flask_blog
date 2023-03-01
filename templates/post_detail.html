@@ -19,6 +19,11 @@
         <div class="container-fluid py-5">
             <p class="col-md-8 fs-4">{{ post.description }}</p>
         </div>
+        {% if current_user.get_user_from_db().name == post.author.name %}
+        <div class="container-fluid py-5">
+            <a class="btn btn-danger" href="{{ url_for('blog.delete_post_view', post_slug=post.slug) }}">Удалить</a>
+        </div>
+        {% endif %}
     </div>
 
     <br>
@@ -34,15 +39,61 @@
                         <button class="btn btn-primary" type="submit">Оставить комментарий</button>
                     </form>
                 {% else %}
-                    <h2>Чтобы оставлять комментарии нужно <a href="{{ url_for('login_view') }}">войти</a></h2>
+                    <h2>Чтобы оставлять комментарии нужно <a href="{{ url_for('account.login_view') }}">войти</a></h2>
                 {% endif %}
                 <br>
-                <div class="row">
-                    {% for comment in all_comment %}
-                        <p>{{ comment.text_comment }} --- {{ comment.author.name }}</p>
+                <div class="list-group">
+                    {% for comment in all_comments %}
+                          <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                            <div class="d-flex w-100 justify-content-between">
+                              <h3 class="mb-1">{{ comment.text_comment }}</h3>
+                              <small>{{ comment.created_at | humanize }}</small>
+                            </div>
+                            <p class="mb-1">{{ comment.author.name }}</p>
+                          </a>
                     {% endfor %}
                 </div>
+
+                <br>
+<!--                PAGINATION-->
+
+                 <div class="text-right">
+                    <a href="{{ url_for('blog.detail_post_view', page=all_comments.prev_num, post_slug=post.slug) }}"
+                       class="btn btn-outline-dark
+                       {% if all_comments.page == 1 %}disabled{% endif %}">
+                        &laquo;
+                    </a>
+                    <!-- Loop through the number of pages to display a link for each-->
+                        {% for page_num in all_comments.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                <!-- Check for the active page and set the link to "Active"-->
+                                {% if all_comments.page == page_num %}
+                                    <a href="{{ url_for('blog.detail_post_view', page=page_num, post_slug=post.slug) }}"
+                                       class="btn btn-dark">
+                                        {{ page_num }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ url_for('blog.detail_post_view', page=page_num, post_slug=post.slug) }}"
+                                       class="btn btn-outline-dark">
+                                        {{ page_num }}
+                                    </a>
+                                {% endif %}
+
+                            {% else %}
+                                ...
+                            {% endif %}
+                        {% endfor %}
+
+                    <a href="{{ url_for('blog.detail_post_view', page=all_comments.next_num, post_slug=post.slug) }}"
+                       class="btn btn-outline-dark
+                       {% if all_comments.page == all_comments.pages %}disabled{% endif %}">
+                        &raquo;
+                    </a>
+                </div>
+
+                <!--   END    PAGINATION-->
+
             </div>
-        </div>
     </div>
+</div>
 {% endblock %}

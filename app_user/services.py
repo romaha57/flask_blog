@@ -1,9 +1,5 @@
-import re
 import imghdr
-
-
-from database import db
-from config import Settings
+import re
 
 
 def check_password(password):
@@ -24,7 +20,3 @@ def is_image(stream):
     if not format:
         return False
     return '.' + (format if format != 'jpeg' else 'jpg')
-
-
-
-

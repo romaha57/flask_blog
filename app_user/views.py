@@ -1,19 +1,19 @@
 import os.path
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory
-from flask_login import login_required, login_user, logout_user, current_user
+from flask import (Blueprint, flash, redirect, render_template, request,
+                   send_from_directory, url_for)
+from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.utils import secure_filename
-from wtforms import ValidationError
 
 from app_blog.models import Post
 from config import Settings
-from .forms import LoginUserForm, RegisterUserForm, RestorePasswordForm, UploadAvatarUser
-from .services import check_password, is_image
-from .models import User
 from database import db
-from .login_config import UserLogin
 
+from .forms import (LoginUserForm, RegisterUserForm, RestorePasswordForm,
+                    UploadAvatarUser)
+from .login_config import UserLogin
+from .models import User
+from .services import check_password, is_image
 
 user_blueprint = Blueprint('account', __name__,  url_prefix='/account')
 
@@ -129,4 +129,3 @@ def change_password_view(username):
 @user_blueprint.route('/media/<path:filename>')
 def media(filename):
     return send_from_directory(Settings.UPLOAD_PATH, filename)
-

@@ -1,10 +1,7 @@
-import os.path
-from datetime import datetime
-
 from sqlalchemy import func
 
-from database import db
 from app_blog.models import *
+from database import db
 
 
 def get_default_status():

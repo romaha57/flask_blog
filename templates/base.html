@@ -54,6 +54,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ url_for('blog.create_category_view') }}">Добавить категорию</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('blog.create_tag_view') }}">Добавить тег</a>
+                </li>
             {% endif %}
 
             {% else %}
@@ -66,7 +69,7 @@
 <!--         END NAVBAR   -->
 
 <!--            SEARCH FIELD-->
-      <form action="{{ url_for('blog.search_result_view') }}" class="d-flex">
+      <form action="{{ url_for('blog.index_view') }}" class="d-flex">
            <input class="form-control me-2" placeholder="Найти на сайте..." type="search" required name="q">
           <button class="btn btn-primary" type="submit">Search</button>
       </form>

@@ -1,10 +1,8 @@
-from datetime import datetime
-
 from slugify import slugify
-from sqlalchemy import func, event
+from sqlalchemy import event, func
 
-from database import db
 from app_user.models import *
+from database import db
 
 
 class Post(db.Model):
@@ -74,11 +72,10 @@ class Tag(db.Model):
 
 
 tags_cloud = db.Table('tags_cloud',
-    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True),
-    db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True)
-)
+                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True),
+                      db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+                      )
 
 
 event.listen(Tag.name, 'set', Tag.slugify, retval=False)
 event.listen(Post.name, 'set', Post.slugify, retval=False)
-
